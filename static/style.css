@@ -1,0 +1,21 @@
+body {
+  background-color: #8ED2C9;
+  color: #FCF4D9;
+}
+
+a:link {
+    color: #FFFFFF;
+}
+
+a:visited {
+    color: #FFFFFF;
+}
+
+table#t01 tr:nth-child(even) {
+    background-color: #eee;
+
+}
+table#t01 th {
+    color: white;
+    background-color: black;
+} 
