@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def helloRoot():
-    return "Pick a <a href='" + url_for('filters') + "'>filter</a>"
+    return render_template('home.html')
 
 @app.route('/filters')
 def filters():
