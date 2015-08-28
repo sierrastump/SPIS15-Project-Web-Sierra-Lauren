@@ -1,13 +1,12 @@
-<!doctype html>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+{% extends "layout.html" %}
 
-<html>
-<title>Filters</title>
+{% block title %}Filters - {% endblock %}
 
-<body>
-<h1>Filters</h1>
+{% block content %}
+<link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
 
-<table id="t01">
+    <h1>Filters</h1>
+    <table id="t01">
   <tr>
     <td><a href="/greyscale">Greyscale</a></td>
     <td><a href="/invert">Invert</a></td>
@@ -21,9 +20,4 @@
     <td>
         
 </table>
-
-
-<script type="text/javascript" src="http://scmplayer.net/script.js" 
-data-config="{'skin':'skins/simpleBlack/skin.css','volume':50,'autoplay':true,'shuffle':false,'repeat':1,'placement':'top','showplaylist':false,'playlist':[{'title':'Another Story','url':'https://www.youtube.com/watch?v=Zo0UfKqwB94'}]}" ></script>
-</body>
-</html>
+{% endblock %}

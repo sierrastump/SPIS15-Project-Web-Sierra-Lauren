@@ -31,7 +31,11 @@ def doGreyscale(im):
     im.show() 
 
 @app.route('/invert')
-def invert(im):
+def invert():
+    return render_template('invert.html')
+
+@app.route('/doInvert')
+def doInvert(im):
     '''changes the image to negative'''
     draw = ImageDraw.Draw(im)
 
@@ -43,10 +47,14 @@ def invert(im):
             newGreen = 255 - green
             newBlue = 255 - blue
             draw.point([(x,y)], (newRed, newGreen, newBlue))
-    im.show()   
-
+    im.show()
+    
 @app.route('/binarize')
-def binarize(im, thresh):
+def binarize():
+    return render_template('binarize.html')
+
+@app.route('/doBinarize')
+def doBinarize(im, thresh):
     '''changes the image to black and white depending on the specified thresh'''
     draw = ImageDraw.Draw(im)
 
@@ -64,9 +72,13 @@ def binarize(im, thresh):
                 newBlue= 0
             draw.point([(x,y)], (newRed, newGreen, newBlue))
     im.show()
-
+    
 @app.route('/mirrorVert')
-def mirrorVert(im):
+def mirrorVert():
+    return render_template('mirrorvertically.html')
+
+@app.route('/domirrorVert')
+def domirrorVert(im):
     '''mirrors the top half of the image across its horizontal axis'''
     draw = ImageDraw.Draw(im)
 
@@ -80,7 +92,11 @@ def mirrorVert(im):
     im.show()
 
 @app.route('/mirrorHoriz')
-def mirrorHoriz(im):
+def mirrorHoriz():
+    return render_template('mirrorhorizontally.html')
+
+@app.route('/domirrorHoriz')
+def domirrorHoriz(im):
     '''mirrors the right half of the image onto the left half'''
     draw = ImageDraw.Draw(im)
 
@@ -94,7 +110,11 @@ def mirrorHoriz(im):
     im.show()
 
 @app.route('/flipVert')
-def flipVert(im):
+def flipVert():
+    return render_template('mirrorvertically.html')
+
+@app.route('/doflipVert')
+def doflipVert(im):
     '''flips the image vertically'''
     draw = ImageDraw.Draw(im)
 
@@ -110,7 +130,11 @@ def flipVert(im):
     im.show()
 
 @app.route('/flipHoriz')
-def flipHoriz(im):
+def flipHoriz():
+    return render_template('fliphorizontally.html')
+
+@app.route('/doflipHoriz')
+def doflipHoriz(im):
     '''flips the image horizontally'''
     draw = ImageDraw.Draw(im)
 

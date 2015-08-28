@@ -1,6 +1,6 @@
 body {
   background-color: #8ED2C9;
-  color: #FCF4D9;
+  color: #FFF7DE;
 }
 
 a:link {
@@ -18,4 +18,9 @@ table#t01 tr:nth-child(even) {
 table#t01 th {
     color: white;
     background-color: black;
-} 
+}
+
+h1 {
+    font-size:400%;
+    font-family: 'Indie Flower', cursive;
+}
