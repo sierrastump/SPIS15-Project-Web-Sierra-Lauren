@@ -1,5 +1,6 @@
 import os
 from flask import Flask, url_for, render_template, request, session
+from PIL import Image, ImageDraw, ImageEnhance
 
 app = Flask(__name__)
 
@@ -43,6 +44,31 @@ def doGreyscale(im):
             newBlue = int(red * .21 + green * .72 + blue * .07)
             draw.point([(x,y)], (newRed, newGreen, newBlue))
     im.show() 
+
+@app.route('/sepia')
+def sepia():
+    return render_template('sepia.html')
+
+@app.route('/doSepia')
+def doSepia(im):
+    """ which calls for writing a pixel function for sepia toning"""
+    draw = ImageDraw.Draw(im)
+
+    (width, height) = im.size
+    for x in range(0, width):
+        for y in range(0, height):
+            (red, green, blue) = im.getpixel((x,y))
+            newRed = int(red * .393 + green*.769 + blue * .189)
+            if newRed > 254:
+                newRed = 255
+            newGreen = int(red * .349 + green*.686 + blue * .168)
+            if newGreen > 254:
+                newGreen = 255
+            newBlue = int(red * .272 + green*.534 + blue * .131)
+            if newBlue > 254:
+                newBlue = 255
+            draw.point([(x,y)], (newRed, newGreen, newBlue))
+    im.show()
 
 @app.route('/invert')
 def invert():
@@ -162,7 +188,18 @@ def doflipHoriz(im):
             im.putpixel( (width -1-x,y) , (newRed, newGreen, newBlue) )
             im.putpixel( (x,y) , (newRed2, newGreen2,newBlue2))
     im.show()
-    
+
+@app.route('/purpleOverlay')
+def purpleOverlay():
+    return render_template('purpleoverlay.html')
+
+@app.route('/doPurpleOverlay')
+def doPurpleOverlay(im, color="#C7A4EB", alpha=0.5):
+    '''makes the image purple'''
+    overlay = Image.new(im.mode, im.size, color)
+    bw_src = ImageEnhance.Color(im).enhance(0.0)
+    return Image.blend(bw_src, overlay, alpha)
+
 if __name__=="__main__":
     app.run(debug=False)
     app.run(port=5000)

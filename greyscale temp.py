@@ -12,3 +12,9 @@ def doGreyscale(im):
             draw.point([(x,y)], (newRed, newGreen, newBlue))
     im.show() 
     im.save("Greyscale.jpg")
+
+def doPurpleOverlay(im, color="#C7A4EB", alpha=0.5):
+    '''makes the image purple'''
+    overlay = Image.new(im.mode, im.size, color)
+    bw_src = ImageEnhance.Color(im).enhance(0.0)
+    return Image.blend(bw_src, overlay, alpha)
