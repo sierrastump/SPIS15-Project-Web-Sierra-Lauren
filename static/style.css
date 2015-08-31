@@ -35,7 +35,12 @@ img.resize{
    max-height:30%;
 }
 
-img.resize2{
-   max-width:10%;
-   max-height:10%;
+img.small{
+   max-width:20%;
+   max-height:20%;
+}
+
+img.tiny{
+   max-width:15%;
+   max-height:15%;
 }
