@@ -1,0 +1,46 @@
+body {
+    background-image: url("http://oi61.tinypic.com/2qwj6ko.jpg");
+    background-repeat: repeat;
+} 
+
+a:link {
+    color: #FFFFFF;
+}
+
+a:visited {
+    color: #FFFFFF;
+}
+
+table#t01 tr:nth-child(even) {
+    background-color: #eee;
+
+}
+table#t01 th {
+    color: white;
+    background-color: black;
+}
+
+h1 {
+    font-size:500%;
+    font-family: 'Indie Flower', cursive;
+}
+
+p.one {
+    border-style: solid;
+    border-width: 5px
+}
+
+img.resize{
+   max-width:30%;
+   max-height:30%;
+}
+
+img.small{
+   max-width:20%;
+   max-height:20%;
+}
+
+img.tiny{
+   max-width:15%;
+   max-height:15%;
+}
