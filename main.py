@@ -1,15 +1,29 @@
 import os
-from flask import Flask, url_for, render_template, request
+from flask import Flask, url_for, render_template, request, session
 
 app = Flask(__name__)
+
+app.secret_key='djakf82y834h2hjksdyfiwe'; 
 
 @app.route('/')
 def helloRoot():
     return render_template('home.html')
 
-@app.route('/filters')
+@app.route('/choosefilter')
 def filters():
-    return render_template('filters.html')
+    return render_template('choosefilter.html')
+
+@app.route('/applyfilter', methods=['GET', 'POST'])
+def applyfilter():
+    session["filter"]=request.form['filters']
+    session["oldimage"]=request.form['file']
+    newImage = processimage(session["oldimage"], session["filter"])
+    return render_template('applyfilter.html', newImage = newImage)
+
+def processimage(oldimage, filter):
+    return "stub.jpg"
+##this is where you put the pil code that applies the filter to
+##old image and returns the file name of new image
 
 @app.route('/greyscale')
 def greyscale():

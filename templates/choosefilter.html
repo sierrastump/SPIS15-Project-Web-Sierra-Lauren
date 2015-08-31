@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}Choose Filter - {% endblock %}
+
+{% block content %}
+<link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
+
+    <h1>Choose a Filter</h1>
+    <form action={{ url_for("applyfilter") }} method="POST">
+  <select name="filters">
+    <option value="gs">Greyscale</option>
+    <option value="inv">Invert</option>
+    <option value="bin">Binarize</option>
+    <option value="mv">Mirror Vertically</option>
+  </select>
+  <br><br>
+   <input type="file" name="file"><br /><br />
+        <input type="submit" value="Upload">
+</form>
+
+<!-- Greyscale 	Invert 	Binarize 	Mirror Vertically 	Mirror Horizontally 	Flip Vertically 	Flip Horizontally -->
+
+{% endblock %}
+
