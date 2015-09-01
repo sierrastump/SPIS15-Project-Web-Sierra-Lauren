@@ -7,16 +7,19 @@
 <link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
 
     <h1>Choose a Filter</h1>
-    <form action={{ url_for("applyfilter") }} method="POST">
+    <form action={{ url_for("upload") }} method="POST" enctype="multipart/form-data">
   <select name="filters">
     <option value="Greyscale">Greyscale</option>
     <option value="Sepia">Sepia</option>
     <option value="Invert">Invert</option>
     <option value="Binarize">Binarize</option>
-    <option value="Mirror Vertically">Mirror Vertically</option>
-    <option value="Mirror Horizontally">Mirror Horizontally</option>
-    <option value="Flip Vertically">Flip Vertically</option>
-    <option value="Flip Horizontally">Flip Horizontally</option>
+    <option value="MirrorVertically">Mirror Vertically</option>
+    <option value="MirrorHorizontally">Mirror Horizontally</option>
+    <option value="FlipVertically">Flip Vertically</option>
+    <option value="FlipHorizontally">Flip Horizontally</option>
+    <option value="Blur">Blur</option>
+    <option value="Sharpen">Sharpen</option>
+    <option value="Edge">Edge</option>
     
   </select>
   <br><br>

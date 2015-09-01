@@ -5,9 +5,8 @@
 {% block content %}
 <link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
 
-    <p>You chose {{session["filter"]}}. Here is your new image. {{newImage}}</p>
-
-<!-- Greyscale 	Invert 	Binarize 	Mirror Vertically 	Mirror Horizontally 	Flip Vertically 	Flip Horizontally -->
+    <p>You chose "{{session["filter"]}}." Here is your new image.</p>
+    <p><img src="{{newImage}}"> </p>
 
 {% endblock %}
 

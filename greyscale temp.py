@@ -1,3 +1,5 @@
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
+
 def doGreyscale(im):
     '''changes the image to greyscale'''
     draw = ImageDraw.Draw(im)

@@ -1,37 +1,140 @@
 import os
-from flask import Flask, url_for, render_template, request, session
-from PIL import Image, ImageDraw, ImageEnhance
+from flask import Flask, url_for, render_template, request, session, redirect
+from flask import send_from_directory
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
+from werkzeug import secure_filename
+import tempfile
 
 app = Flask(__name__)
 
-app.secret_key='djakf82y834h2hjksdyfiwe'; 
+app.secret_key='djakf82y834h2hjksdyfiwe';
+
+# This is the path to the upload directory
+app.config['UPLOAD_FOLDER'] = 'uploads/'
+# These are the extension that we are accepting to be uploaded
+app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif'])
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2MB
+
+
+def check_file(file):
+    # Check if the file is one of the allowed types/extensions
+    if not allowed_file(file.filename):
+        print "Block 1"
+        message = "Sorry. Only files that end with one of these "
+        message += "extensions is permitted: " 
+        message += str(app.config['ALLOWED_EXTENSIONS'])
+        message += "<a href='" + url_for("index") + "'>Try again</a>"
+        return message
+    elif not file:
+        print "block 2"
+        message = "Sorry. There was an error with that file.<br>"
+        message += "<a href='" + url_for("index") + "'>Try again</a>"
+        return message
+    return ''
+
+# If the file you are trying to upload is too big, you'll get this message
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    message = 'The file is too large, my friend.<br>'
+    maxFileSizeKB = app.config['MAX_CONTENT_LENGTH']/(1024)
+    message += "The biggest I can handle is " + str(maxFileSizeKB) + "KB"
+    message += "<a href='" + url_for("filters") + "'>Try again</a>"
+    return message, 413
+
+# For a given file, return whether it's an allowed type or not
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+# Route that will process the file upload
+@app.route('/upload', methods=['POST'])
+def upload():
+    # Get the name of the uploaded file
+    file = request.files['file']
+    result = check_file(file)
+    if result != '':
+        print "result was not blank, result =", result
+        return result
+    else:
+        print "result was blank"
+        # Make the filename safe, remove unsupported chars
+        filename = secure_filename(file.filename)
+
+        fullFilename = (os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        session['file'] = fullFilename
+        print "session['file'] =" ,session['file']
+        # Move the file form the temporal folder to
+        # the upload folder we setup
+        file.save(fullFilename)
+        # Redirect the user to the uploaded_file route, which
+        # will basicaly show on the browser the uploaded file
+        session["filter"]=request.form['filters']
+        newImage = processimage(session["filter"])
+        return render_template('applyfilter.html', newImage = fixupfilename(newImage))
+
+# This route is expecting a parameter containing the name
+# of a file. Then it will locate that file on the upload
+# directory and show it on the browser, so if the user uploads
+# an image, that image is going to be show after the upload
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
+
+####
 
 @app.route('/')
 def helloRoot():
     return render_template('home.html')
 
+@app.route('/startover')
+def startOver():
+    session.clear()
+    return redirect(url_for('helloRoot'))
+
 @app.route('/choosefilter')
 def filters():
     return render_template('choosefilter.html')
 
-@app.route('/applyfilter', methods=['GET', 'POST'])
-def applyfilter():
-    session["filter"]=request.form['filters']
-    session["oldimage"]=request.form['file']
-    newImage = processimage(session["oldimage"], session["filter"])
-    return render_template('applyfilter.html', newImage = newImage)
+def getTempFileName(myPrefix):
+    f = tempfile.NamedTemporaryFile(suffix = ".jpg", prefix = myPrefix, delete=False, dir=app.config['UPLOAD_FOLDER'])
+    f.close()
+    return f.name
 
-def processimage(oldimage, filter):
-    return "stub.jpg"
+def processimage(filter):
+    im = Image.open(session["file"])
+    if filter == "Greyscale":
+        greyscale(im)
+    if filter == "Sepia":
+        sepia(im)
+    if filter == "Invert":
+        invert(im)
+    if filter == "MirrorVertically":
+        mirrorVert(im)
+    if filter == "MirrorHorizontally":
+        mirrorHoriz(im)
+    if filter == "FlipVertically":
+        fipVert(im)
+    if filter == "FlipHorizontally":
+        flipHoriz(im)
+    name = getTempFileName("newImage")
+    print "In processimage, name=", name
+    im.save(name)
+    return name
+        
 ##this is where you put the pil code that applies the filter to
 ##old image and returns the file name of new image
 
-@app.route('/greyscale')
-def greyscale():
-    return render_template('greyscale.html')
+def fixupfilename(stupidfilename):
+    '''change a file name such as
+    home/linux/ieng6/spis15/spis15ak/github/SPIS15-Project-Web-Sierra-Lauren/uploads/newImagehMICau.jpg
+    into /uploads/newImagehMICau.jpg'''
+    goodfilename = "/" + app.config['UPLOAD_FOLDER'] + os.path.basename(stupidfilename)
+    return goodfilename
 
-@app.route('/doGreyscale')
-def doGreyscale(im):
+@app.route('/greyscale')
+def greyscale(im):
     '''changes the image to greyscale'''
     draw = ImageDraw.Draw(im)
 
@@ -43,14 +146,9 @@ def doGreyscale(im):
             newGreen = int(red * .21 + green * .72 + blue * .07)
             newBlue = int(red * .21 + green * .72 + blue * .07)
             draw.point([(x,y)], (newRed, newGreen, newBlue))
-    im.show() 
 
 @app.route('/sepia')
-def sepia():
-    return render_template('sepia.html')
-
-@app.route('/doSepia')
-def doSepia(im):
+def sepia(im):
     """ which calls for writing a pixel function for sepia toning"""
     draw = ImageDraw.Draw(im)
 
@@ -68,14 +166,9 @@ def doSepia(im):
             if newBlue > 254:
                 newBlue = 255
             draw.point([(x,y)], (newRed, newGreen, newBlue))
-    im.show()
-
+            
 @app.route('/invert')
-def invert():
-    return render_template('invert.html')
-
-@app.route('/doInvert')
-def doInvert(im):
+def invert(im):
     '''changes the image to negative'''
     draw = ImageDraw.Draw(im)
 
@@ -87,38 +180,9 @@ def doInvert(im):
             newGreen = 255 - green
             newBlue = 255 - blue
             draw.point([(x,y)], (newRed, newGreen, newBlue))
-    im.show()
-    
-@app.route('/binarize')
-def binarize():
-    return render_template('binarize.html')
 
-@app.route('/doBinarize')
-def doBinarize(im, thresh):
-    '''changes the image to black and white depending on the specified thresh'''
-    draw = ImageDraw.Draw(im)
-
-    (width, height) = im.size
-    for x in range(width):
-        for y in range(height):
-            (red, green, blue) = im.getpixel((x,y))
-            if thresh <= ((red + green + blue)/3):
-                newRed= 255
-                newGreen= 255
-                newBlue= 255
-            else:
-                newRed= 0
-                newGreen= 0
-                newBlue= 0
-            draw.point([(x,y)], (newRed, newGreen, newBlue))
-    im.show()
-    
 @app.route('/mirrorVert')
-def mirrorVert():
-    return render_template('mirrorvertically.html')
-
-@app.route('/domirrorVert')
-def domirrorVert(im):
+def mirrorVert(im):
     '''mirrors the top half of the image across its horizontal axis'''
     draw = ImageDraw.Draw(im)
 
@@ -129,14 +193,9 @@ def domirrorVert(im):
             fromY = height - y
             (newRed, newGreen, newBlue) = im.getpixel( (fromX, fromY))
             im.putpixel( (x,y) , (newRed, newGreen, newBlue) )
-    im.show()
 
 @app.route('/mirrorHoriz')
-def mirrorHoriz():
-    return render_template('mirrorhorizontally.html')
-
-@app.route('/domirrorHoriz')
-def domirrorHoriz(im):
+def mirrorHoriz(im):
     '''mirrors the right half of the image onto the left half'''
     draw = ImageDraw.Draw(im)
 
@@ -147,14 +206,9 @@ def domirrorHoriz(im):
             fromY = y
             (newRed, newGreen, newBlue) = im.getpixel( (fromX, fromY))
             im.putpixel( (x,y) , (newRed, newGreen, newBlue) )
-    im.show()
 
 @app.route('/flipVert')
-def flipVert():
-    return render_template('mirrorvertically.html')
-
-@app.route('/doflipVert')
-def doflipVert(im):
+def flipVert(im):
     '''flips the image vertically'''
     draw = ImageDraw.Draw(im)
 
@@ -167,14 +221,9 @@ def doflipVert(im):
             (newRed2, newGreen2,newBlue2) = im.getpixel( (x, fromY) )
             im.putpixel( (x,height-1- y) , (newRed, newGreen, newBlue) )
             im.putpixel( (x,y) , (newRed2, newGreen2,newBlue2))
-    im.show()
 
 @app.route('/flipHoriz')
-def flipHoriz():
-    return render_template('fliphorizontally.html')
-
-@app.route('/doflipHoriz')
-def doflipHoriz(im):
+def flipHoriz(im):
     '''flips the image horizontally'''
     draw = ImageDraw.Draw(im)
 
@@ -187,19 +236,46 @@ def doflipHoriz(im):
             (newRed2, newGreen2,newBlue2) = im.getpixel( (fromX, y) )
             im.putpixel( (width -1-x,y) , (newRed, newGreen, newBlue) )
             im.putpixel( (x,y) , (newRed2, newGreen2,newBlue2))
-    im.show()
 
-@app.route('/purpleOverlay')
-def purpleOverlay():
-    return render_template('purpleoverlay.html')
+@app.route('/blur')
+def blur(im):
+    '''blurs image'''
+    blurred = im.filter(ImageFilter.BLUR)
+    blurred.show()
 
-@app.route('/doPurpleOverlay')
-def doPurpleOverlay(im, color="#C7A4EB", alpha=0.5):
-    '''makes the image purple'''
-    overlay = Image.new(im.mode, im.size, color)
-    bw_src = ImageEnhance.Color(im).enhance(0.0)
-    return Image.blend(bw_src, overlay, alpha)
+@app.route('/sharpen')
+def sharpen(im):
+    '''sharpens image'''
+    sharpened = im.filter(ImageFilter.SHARPEN)
+    sharpened.show()
+
+@app.route('/edge')
+def edge(im):
+    '''edges'''
+    edged = im.filter(ImageFilter.EDGE_ENHANCE)
+    edged.show()
+
+@app.route('/redTint')
+def redTint(im):
+    '''red tinted image'''
+    layer = Image.new('RGB', im.size, 'red')
+    output = Image.blend(im, layer, 0.5)
+    output.show()
+
+@app.route('/blueTint')
+def blueTint(im):
+    '''blue tinted image'''
+    layer = Image.new('RGB', im.size, 'blue')
+    output = Image.blend(im, layer, 0.5)
+    output.show()
+
+@app.route('/greenTint')
+def greenTint(im):
+    '''green tinted image'''
+    layer = Image.new('RGB', im.size, 'green')
+    output = Image.blend(im, layer, 0.5)
+    output.show()
 
 if __name__=="__main__":
-    app.run(debug=False)
+    app.run(debug=True)
     app.run(port=5000)
