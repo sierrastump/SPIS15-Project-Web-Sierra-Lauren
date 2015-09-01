@@ -88,11 +88,6 @@ def uploaded_file(filename):
 def helloRoot():
     return render_template('home.html')
 
-@app.route('/startover')
-def startOver():
-    session.clear()
-    return redirect(url_for('helloRoot'))
-
 @app.route('/choosefilter')
 def filters():
     return render_template('choosefilter.html')
@@ -110,14 +105,28 @@ def processimage(filter):
         sepia(im)
     if filter == "Invert":
         invert(im)
-    if filter == "MirrorVertically":
+    if filter == "Mirror Vertically":
         mirrorVert(im)
-    if filter == "MirrorHorizontally":
+    if filter == "Mirror Horizontally":
         mirrorHoriz(im)
-    if filter == "FlipVertically":
-        fipVert(im)
-    if filter == "FlipHorizontally":
+    if filter == "Flip Vertically":
+        flipVert(im)
+    if filter == "Flip Horizontally":
         flipHoriz(im)
+    if filter == "Blur":
+        blur(im)
+    if filter == "Sharpen":
+        sharpen(im)
+    if filter == "Edge":
+        edge(im)
+    if filter == "Red Tint":
+        redTint(im)
+    if filter == "Blue Tint":
+        blueTint(im)
+    if filter == "Green Tint":
+        greenTint(im)
+    if filter == "Purple Tint":
+        purpleTint(im)
     name = getTempFileName("newImage")
     print "In processimage, name=", name
     im.save(name)
@@ -240,42 +249,42 @@ def flipHoriz(im):
 @app.route('/blur')
 def blur(im):
     '''blurs image'''
-    blurred = im.filter(ImageFilter.BLUR)
-    blurred.show()
+    im.filter(ImageFilter.BLUR)
 
 @app.route('/sharpen')
 def sharpen(im):
     '''sharpens image'''
-    sharpened = im.filter(ImageFilter.SHARPEN)
-    sharpened.show()
+    im.filter(ImageFilter.SHARPEN)
 
 @app.route('/edge')
 def edge(im):
     '''edges'''
-    edged = im.filter(ImageFilter.EDGE_ENHANCE)
-    edged.show()
+    im.filter(ImageFilter.EDGE_ENHANCE)
 
 @app.route('/redTint')
 def redTint(im):
     '''red tinted image'''
     layer = Image.new('RGB', im.size, 'red')
-    output = Image.blend(im, layer, 0.5)
-    output.show()
+    Image.blend(im, layer, 0.5)
 
 @app.route('/blueTint')
 def blueTint(im):
     '''blue tinted image'''
     layer = Image.new('RGB', im.size, 'blue')
-    output = Image.blend(im, layer, 0.5)
-    output.show()
+    Image.blend(im, layer, 0.5)
 
 @app.route('/greenTint')
 def greenTint(im):
     '''green tinted image'''
     layer = Image.new('RGB', im.size, 'green')
-    output = Image.blend(im, layer, 0.5)
-    output.show()
+    Image.blend(im, layer, 0.5)
+
+@app.route('/purpleTint')
+def purpleTint(im):
+    '''green tinted image'''
+    layer = Image.new('RGB', im.size, 'purple')
+    Image.blend(im, layer, 0.5)
 
 if __name__=="__main__":
-    app.run(debug=True)
+    app.run(debug=False)
     app.run(port=5000)
