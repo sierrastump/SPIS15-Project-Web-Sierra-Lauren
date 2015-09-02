@@ -15,6 +15,7 @@ app.config['UPLOAD_FOLDER'] = 'uploads/'
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2MB
 
+
 def check_file(file):
     # Check if the file is one of the allowed types/extensions
     if not allowed_file(file.filename):
@@ -289,8 +290,12 @@ def greenTint(im):
 def purpleTint(im):
     '''purple tinted image'''
     layer = Image.new('RGB', im.size, 'purple')
+<<<<<<< HEAD
+    output = Image.blend(im, layer, 0.5)
+=======
     return Image.blend(im, layer, 0.5)
+>>>>>>> 91d4efa6de38f7d0ea220a8552a0383417ddd8a9
 
 if __name__=="__main__":
-    app.run(debug=False)
+    app.run(debug=True)
     app.run(port=5000)
