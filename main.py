@@ -15,7 +15,6 @@ app.config['UPLOAD_FOLDER'] = 'uploads/'
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2MB
 
-
 def check_file(file):
     # Check if the file is one of the allowed types/extensions
     if not allowed_file(file.filename):
