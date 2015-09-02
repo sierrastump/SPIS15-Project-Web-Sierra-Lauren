@@ -4,8 +4,8 @@
 
 {% block content %}
 <link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
-
-    <p style="font-size:200%">You chose "{{session["filter"]}}." Here is your new image.</p>
+    
+    <h2>You chose "{{session["filter"]}}." Here is your new image.</h2>
     <p><img src="{{newImage}}"> </p>
     <html>
     <p style="font-size:200%">Click <a href="/choosefilter">here</a> to start over.</p>
