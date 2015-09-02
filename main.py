@@ -23,12 +23,12 @@ def check_file(file):
         message += "extensions is permitted: " 
         message += " 'gif', 'jpg', jpeg', 'png'. "
         message += "<a href='" + url_for("filters") + "'>Try again</a>."
-        return message
+        return render_template('error.html', errormessage=message)
     elif not file:
         print "block 2"
         message = "Sorry. There was an error with that file.<br>"
         message += "<a href='" + url_for("filters") + "'>Try again</a>"
-        return message
+        return render_template('error.html', errormessage=message)
     return ''
 
 # If the file you are trying to upload is too big, you'll get this message
@@ -292,5 +292,4 @@ def purpleTint(im):
     return Image.blend(im, layer, 0.5)
 
 if __name__=="__main__":
-    app.run(debug=False)
-    app.run(port=5000)
+    app.run(debug=False, port=2345)
