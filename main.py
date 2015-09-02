@@ -292,5 +292,5 @@ def purpleTint(im):
     return Image.blend(im, layer, 0.5)
 
 if __name__=="__main__":
-    app.run(debug=True)
+    app.run(debug=False)
     app.run(port=5000)
