@@ -99,6 +99,7 @@ def getTempFileName(myPrefix):
 
 def processimage(filter):
     im = Image.open(session["file"])
+    pic = im
     if filter == "Greyscale":
         greyscale(im)
     if filter == "Sepia":
@@ -129,7 +130,7 @@ def processimage(filter):
         purpleTint(im)
     name = getTempFileName("newImage")
     print "In processimage, name=", name
-    im.save(name)
+    pic.save(name)
     return name
         
 ##this is where you put the pil code that applies the filter to
@@ -254,8 +255,8 @@ def blur(im):
 @app.route('/sharpen')
 def sharpen(im):
     '''sharpens image'''
-    im.filter(ImageFilter.SHARPEN)
-
+    im = im.filter(ImageFilter.SHARPEN)
+    
 @app.route('/edge')
 def edge(im):
     '''edges'''
@@ -281,9 +282,9 @@ def greenTint(im):
 
 @app.route('/purpleTint')
 def purpleTint(im):
-    '''green tinted image'''
+    '''purple tinted image'''
     layer = Image.new('RGB', im.size, 'purple')
-    Image.blend(im, layer, 0.5)
+    pic = Image.blend(im, layer, 0.5)
 
 if __name__=="__main__":
     app.run(debug=False)
