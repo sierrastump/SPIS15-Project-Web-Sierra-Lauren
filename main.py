@@ -21,13 +21,13 @@ def check_file(file):
         print "Block 1"
         message = "Sorry. Only files that end with one of these "
         message += "extensions is permitted: " 
-        message += str(app.config['ALLOWED_EXTENSIONS'])
-        message += "<a href='" + url_for("index") + "'>Try again</a>"
+        message += " 'gif', 'jpg', jpeg', 'png'. "
+        message += "<a href='" + url_for("filters") + "'>Try again</a>."
         return message
     elif not file:
         print "block 2"
         message = "Sorry. There was an error with that file.<br>"
-        message += "<a href='" + url_for("index") + "'>Try again</a>"
+        message += "<a href='" + url_for("filters") + "'>Try again</a>"
         return message
     return ''
 
