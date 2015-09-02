@@ -283,7 +283,7 @@ def greenTint(im):
 def purpleTint(im):
     '''green tinted image'''
     layer = Image.new('RGB', im.size, 'purple')
-    Image.blend(im, layer, 0.5)
+    output = Image.blend(im, layer, 0.5)
 
 if __name__=="__main__":
     app.run(debug=False)
