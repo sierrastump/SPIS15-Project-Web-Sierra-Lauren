@@ -4,17 +4,17 @@ Final Project: Web App
 Photo Editing: http://picture-purrfect.herokuapp.com/
 
 Functions:
-Greyscale
-Sepia
-Invert
-Mirror Vertically
-Mirror Horizontally
-Flip Vertically
-Flip Horizontally
-Blur
-Sharpen
-Edge
-Red Tint
-Blue Tint
-Green Tint
-Purple Tint
+<br>Greyscale
+<br>Sepia
+<br>Invert
+<br>Mirror Vertically
+<br>Mirror Horizontally
+<br>Flip Vertically
+<br>Flip Horizontally
+<br>Blur
+<br>Sharpen
+<br>Edge
+<br>Red Tint
+<br>Blue Tint
+<br>Green Tint
+<br>Purple Tint
