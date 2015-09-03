@@ -20,8 +20,8 @@ def check_file(file):
     if not allowed_file(file.filename):
         print "Block 1"
         message = "Sorry. Only files that end with one of these "
-        message += "extensions is permitted: " 
-        message += " 'gif', 'jpg', jpeg', 'png'. "
+        message += "extensions are permitted: " 
+        message += " 'gif', 'jpg', jpeg', 'png', 'bmp'. "
         message += "<a href='" + url_for("filters") + "'>Try again</a>."
         return render_template('error.html', errormessage=message)
     elif not file:
